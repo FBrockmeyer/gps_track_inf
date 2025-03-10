@@ -25,11 +25,13 @@ col =
   length() |>
   palette.colors(palette='Set 1')
 
+png('./plots/avg_track_cartesian.png', width=720, height=720, res=120)
 plot(M, col=col[d$id], pch=20, xlab='x', ylab='y', main='Cartesian')
 lapply(unique(d$id), \(i) lines(M[d$id==i, ], col=col[i], lty='dashed'))
 lines(f1$s[f1$ord, ], lwd=2)
 legend("topleft", legend=c(unique(d$id), 'avg'), col=c(col, 'black'), pch=20L, lty=2L)
 princurve::whiskers(as.matrix(M), f1$s, col='gray')
+dev.off()
 
 avg_gps_tracks = 
   f1$s[f1$ord, ] |>
@@ -39,6 +41,7 @@ avg_gps_tracks =
   sf::st_combine() |>
   sf::st_cast('LINESTRING') 
 
+png('./plots/avg_track_epsg4326.png', width=720, height=720, res=120)
 plot(avg_gps_tracks, lwd=2, pch=4L, main='EPSG:4326',
      ylab='Longitude', xlab='Latitude', axes=TRUE)
 lapply(seq_along(sampled_routes), \(i) 
@@ -46,7 +49,7 @@ lapply(seq_along(sampled_routes), \(i)
             lty=2L, col=col[i], type='b', pch=20L)) 
 legend('topleft', legend=c(unique(d$id), 'avg'), 
        col=c(col, 'black'), pch=20, lty=2)
-
+dev.off()
 
 # i = LPCM::lpc(M, h=.075)
 # j = LPCM::unscale(i)
